@@ -1,0 +1,42 @@
+html{
+    font-family: -apple-system, ".SFNSText-Regular", "San Francisco", BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", "Lucida Grande", Arial, sans-serif
+}
+
+table {
+    width: 100%;
+    border: 1px solid #dee2e6;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: center;
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+tr > td:first-child, tr > th:first-child { text-align: left }
+
+thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+.usage {
+    padding-bottom: 20px;
+}
+.usage label {
+    font-size: 12px
+}
+.usage code {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border-radius: 3px;
+    display: block;
+    font-family: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;
+}
