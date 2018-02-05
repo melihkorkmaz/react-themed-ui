@@ -34,7 +34,7 @@ Camel case field names will be translated to 'my-fancy-color' and 'my-fancy-colo
 ## Components
 React themed ui components...
 ### Button
-You can use buttons with different colors, size and style. Default color is primary with standard style. Any color name is acceptable with "color" attribute.
+You can use buttons with different colors, size and styles. Default color is primary with standard style. Any color name is acceptable with "color" attribute.
 
 ```jsx
 <Button color="success">Hello</Button>
@@ -50,3 +50,19 @@ You can use buttons with different colors, size and style. Default color is prim
 | rectangle | bool | No border radius |
 | pill | bool | More border radius style |
 | block | bool | 100% width|
+
+### Alerts
+You can use alerts with different colors and styles. Default color is primary with standard style. Any color name is acceptable with "color" attribute.
+
+```jsx
+<Alert color="warning">Hello! This is alert message box.</Alert>
+```
+<img src="https://image.ibb.co/hRWzQc/Screen_Shot_2018_02_05_at_20_18_32.png"/>
+ 
+ Define style with these attributes
+
+| Attribute | type | Description |
+| ------ | ------ | ------ | 
+| shadow | bool | Drop shadow |
+| outline | bool | Outline button style |
+| rectangle | bool | No border radius |

@@ -7,7 +7,7 @@
 		exports["rtui"] = factory(require("classnames"), require("aphrodite"));
 	else
 		root["rtui"] = factory(root["classnames"], root["aphrodite"]);
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_7__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_4__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -370,6 +370,177 @@ module.exports = invariant;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports._changeColor = exports.styles = exports.colors = exports.themes = undefined;
+
+var _aphrodite = __webpack_require__(4);
+
+var _helpers = __webpack_require__(5);
+
+var _themes = __webpack_require__(15);
+
+var _themes2 = _interopRequireDefault(_themes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var defaultOptions = {
+    theme: "default",
+    colors: {}
+};
+
+var colors = {};
+var styles = {};
+
+var init = function init() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultOptions;
+
+
+    var themeSource = _themes2.default[(options.theme || 'default') + 'Theme'] || _themes2.default['defaultTheme'];
+
+    if (options.colors) {
+        Object.keys(options.colors).forEach(function (key) {
+            var keyName = (0, _helpers.fromCamelCase)(key);
+            var value = options.colors[key];
+            delete options.colors[key];
+            options.colors[keyName] = value;
+        });
+    }
+
+    initColors(themeSource, options);
+    initStyles();
+};
+
+var initColors = function initColors(themeSource, options) {
+    return exports.colors = colors = Object.assign({}, themeSource.colors, options.colors || defaultOptions.colors);
+};
+var initStyles = function initStyles() {
+
+    exports.styles = styles = _aphrodite.StyleSheet.create(Object.keys(colors).reduce(function (acc, key) {
+
+        if (!key.includes('Invert')) {
+            acc[key + '-background'] = {
+                backgroundColor: colors[key],
+                color: colors[key + '-invert']
+            };
+
+            acc[key + '-background-hover'] = {
+                backgroundColor: colors[key],
+                color: colors[key + '-invert'],
+                ':hover': {
+                    backgroundColor: changeColor(colors[key], -20)
+                }
+            };
+
+            acc[key + '-border'] = {
+                borderColor: colors[key],
+                color: colors[key]
+            };
+
+            acc[key + '-border-hover'] = {
+                borderColor: colors[key],
+                color: colors[key],
+                ':hover': {
+                    backgroundColor: colors[key],
+                    color: colors[key + '-invert']
+                }
+            };
+
+            acc['' + key] = {
+                backgroundColor: colors[key]
+            };
+        }
+
+        return acc;
+    }, {}));
+};
+
+var changeColor = function changeColor(color, percent) {
+
+    if (color === undefined || !color.includes('#') || color.length !== 7 && color.length !== 4) return '#000000';
+
+    if (color.length === 4) color += color.slice(1, 4);
+
+    var red = parseInt(color.substring(1, 3), 16);
+    var green = parseInt(color.substring(3, 5), 16);
+    var blue = parseInt(color.substring(5, 7), 16);
+
+    red = parseInt(red * (100 + percent) / 100);
+    green = parseInt(green * (100 + percent) / 100);
+    blue = parseInt(blue * (100 + percent) / 100);
+
+    red = red < 255 ? red : 255;
+    green = green < 255 ? green : 255;
+    blue = blue < 255 ? blue : 255;
+
+    var sRed = red.toString(16).length == 1 ? "0" + red.toString(16) : red.toString(16);
+    var sGreen = green.toString(16).length == 1 ? "0" + green.toString(16) : green.toString(16);
+    var sBlue = blue.toString(16).length == 1 ? "0" + blue.toString(16) : blue.toString(16);
+
+    return '#' + sRed + sGreen + sBlue;
+};
+
+exports.themes = _themes2.default;
+exports.colors = colors;
+exports.styles = styles;
+exports._changeColor = changeColor;
+exports.default = init;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var userProps = function userProps(props) {
+    return function () {
+        for (var _len = arguments.length, fields = Array(_len), _key = 0; _key < _len; _key++) {
+            fields[_key] = arguments[_key];
+        }
+
+        var response = Object.assign({}, props);
+        fields.forEach(function (field) {
+            return delete response[field];
+        });
+        return response;
+    };
+};
+
+var fromCamelCase = function fromCamelCase(word) {
+    return word.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+};
+
+var upperFirstChar = function upperFirstChar(name) {
+    return '' + name.substring(0, 1).toUpperCase() + name.substring(1, name.length);
+};
+var formatName = function formatName(name) {
+    return name.indexOf('-') >= 0 ? name.split('-').map(function (x) {
+        return upperFirstChar(x);
+    }).join(' ') : upperFirstChar(name);
+};
+
+exports.userProps = userProps;
+exports.fromCamelCase = fromCamelCase;
+exports.formatName = formatName;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /*
 object-assign
 (c) Sindre Sorhus
@@ -463,7 +634,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -532,7 +703,7 @@ module.exports = warning;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -551,173 +722,22 @@ module.exports = ReactPropTypesSecret;
 
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports._changeColor = exports.styles = exports.colors = exports.themes = undefined;
-
-var _aphrodite = __webpack_require__(7);
-
-var _helpers = __webpack_require__(8);
-
-var _themes = __webpack_require__(12);
-
-var _themes2 = _interopRequireDefault(_themes);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var defaultOptions = {
-    theme: "default",
-    colors: {}
-};
-
-var colors = {};
-var styles = {};
-
-var init = function init() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultOptions;
-
-
-    var themeSource = _themes2.default[(options.theme || 'default') + 'Theme'] || _themes2.default['defaultTheme'];
-
-    if (options.colors) {
-        Object.keys(options.colors).forEach(function (key) {
-            var keyName = (0, _helpers.fromCamelCase)(key);
-            var value = options.colors[key];
-            delete options.colors[key];
-            options.colors[keyName] = value;
-        });
-    }
-
-    initColors(themeSource, options);
-    initStyles();
-};
-
-var initColors = function initColors(themeSource, options) {
-    return exports.colors = colors = Object.assign({}, themeSource.colors, options.colors || defaultOptions.colors);
-};
-var initStyles = function initStyles() {
-
-    exports.styles = styles = _aphrodite.StyleSheet.create(Object.keys(colors).reduce(function (acc, key) {
-
-        if (!key.includes('Invert')) {
-            acc[key + '-background'] = {
-                backgroundColor: colors[key],
-                color: colors[key + '-invert']
-            };
-
-            acc[key + '-background-hover'] = {
-                backgroundColor: colors[key],
-                color: colors[key + '-invert'],
-                ':hover': {
-                    backgroundColor: changeColor(colors[key], -20)
-                }
-            };
-
-            acc[key + '-border-hover'] = {
-                borderColor: colors[key],
-                color: colors[key],
-                ':hover': {
-                    backgroundColor: colors[key],
-                    color: colors[key + '-invert']
-                }
-            };
-
-            acc['' + key] = {
-                backgroundColor: colors[key]
-            };
-        }
-
-        return acc;
-    }, {}));
-};
-
-var changeColor = function changeColor(color, percent) {
-
-    if (color === undefined || !color.includes('#') || color.length !== 7 && color.length !== 4) return '#000000';
-
-    if (color.length === 4) color += color.slice(1, 4);
-
-    var red = parseInt(color.substring(1, 3), 16);
-    var green = parseInt(color.substring(3, 5), 16);
-    var blue = parseInt(color.substring(5, 7), 16);
-
-    red = parseInt(red * (100 + percent) / 100);
-    green = parseInt(green * (100 + percent) / 100);
-    blue = parseInt(blue * (100 + percent) / 100);
-
-    red = red < 255 ? red : 255;
-    green = green < 255 ? green : 255;
-    blue = blue < 255 ? blue : 255;
-
-    var sRed = red.toString(16).length == 1 ? "0" + red.toString(16) : red.toString(16);
-    var sGreen = green.toString(16).length == 1 ? "0" + green.toString(16) : green.toString(16);
-    var sBlue = blue.toString(16).length == 1 ? "0" + blue.toString(16) : blue.toString(16);
-
-    return '#' + sRed + sGreen + sBlue;
-};
-
-exports.themes = _themes2.default;
-exports.colors = colors;
-exports.styles = styles;
-exports._changeColor = changeColor;
-exports.default = init;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var userProps = function userProps(props) {
-    return function () {
-        for (var _len = arguments.length, fields = Array(_len), _key = 0; _key < _len; _key++) {
-            fields[_key] = arguments[_key];
-        }
-
-        var response = Object.assign({}, props);
-        fields.forEach(function (field) {
-            return delete response[field];
-        });
-        return response;
-    };
-};
-
-var fromCamelCase = function fromCamelCase(word) {
-    return word.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-};
-
-var upperFirstChar = function upperFirstChar(name) {
-    return '' + name.substring(0, 1).toUpperCase() + name.substring(1, name.length);
-};
-var formatName = function formatName(name) {
-    return name.indexOf('-') >= 0 ? name.split('-').map(function (x) {
-        return upperFirstChar(x);
-    }).join(' ') : upperFirstChar(name);
-};
-
-exports.userProps = userProps;
-exports.fromCamelCase = fromCamelCase;
-exports.formatName = formatName;
-
-/***/ }),
 /* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports = __webpack_require__(19);
+} else {
+  module.exports = __webpack_require__(20);
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -741,7 +761,7 @@ module.exports = emptyObject;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -756,8 +776,8 @@ module.exports = emptyObject;
 
 if (process.env.NODE_ENV !== 'production') {
   var invariant = __webpack_require__(2);
-  var warning = __webpack_require__(4);
-  var ReactPropTypesSecret = __webpack_require__(5);
+  var warning = __webpack_require__(7);
+  var ReactPropTypesSecret = __webpack_require__(8);
   var loggedTypeFailures = {};
 }
 
@@ -808,7 +828,48 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 11 */
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+if (process.env.NODE_ENV !== 'production') {
+  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
+    Symbol.for &&
+    Symbol.for('react.element')) ||
+    0xeac7;
+
+  var isValidElement = function(object) {
+    return typeof object === 'object' &&
+      object !== null &&
+      object.$$typeof === REACT_ELEMENT_TYPE;
+  };
+
+  // By explicitly using `prop-types` you are opting into new development behavior.
+  // http://fb.me/prop-types-in-prod
+  var throwOnDirectAccess = true;
+  module.exports = __webpack_require__(21)(isValidElement, throwOnDirectAccess);
+} else {
+  // By explicitly using `prop-types` you are opting into new production behavior.
+  // http://fb.me/prop-types-in-prod
+  module.exports = __webpack_require__(22)();
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -817,25 +878,30 @@ module.exports = checkPropTypes;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.Button = undefined;
+exports.Button = exports.Alert = undefined;
 
-var _theme = __webpack_require__(6);
+var _theme = __webpack_require__(3);
 
 var _theme2 = _interopRequireDefault(_theme);
 
-var _Button = __webpack_require__(15);
+var _Alert = __webpack_require__(18);
+
+var _Alert2 = _interopRequireDefault(_Alert);
+
+var _Button = __webpack_require__(24);
 
 var _Button2 = _interopRequireDefault(_Button);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+exports.Alert = _Alert2.default;
 exports.Button = _Button2.default;
 exports.default = {
     theme: _theme2.default
 };
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -845,11 +911,11 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _default = __webpack_require__(13);
+var _default = __webpack_require__(16);
 
 var _default2 = _interopRequireDefault(_default);
 
-var _bootstrap = __webpack_require__(14);
+var _bootstrap = __webpack_require__(17);
 
 var _bootstrap2 = _interopRequireDefault(_bootstrap);
 
@@ -861,7 +927,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -892,7 +958,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -923,7 +989,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -935,23 +1001,23 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _react = __webpack_require__(16);
+var _react = __webpack_require__(9);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = __webpack_require__(19);
+var _propTypes = __webpack_require__(12);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _classnames = __webpack_require__(22);
+var _classnames = __webpack_require__(13);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
-var _aphrodite = __webpack_require__(7);
+var _aphrodite = __webpack_require__(4);
 
-var _theme = __webpack_require__(6);
+var _theme = __webpack_require__(3);
 
-var _helpers = __webpack_require__(8);
+var _helpers = __webpack_require__(5);
 
 __webpack_require__(23);
 
@@ -959,23 +1025,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var Button = function Button(props) {
-    Button.propTypes = {
+var Alert = function Alert(props) {
+    Alert.propTypes = {
         color: _propTypes2.default.oneOf(Object.keys(_theme.colors)),
-        size: _propTypes2.default.oneOf(['mini', 'tiny', 'small', 'medium', 'large', 'big', 'huge']),
-        block: _propTypes2.default.bool,
         outline: _propTypes2.default.bool,
         rectangle: _propTypes2.default.bool,
-        pill: _propTypes2.default.bool,
         shadow: _propTypes2.default.bool
     };
 
-    var classNameList = ['rtui-button', props.size, props.block ? 'block' : '', props.outline ? (0, _aphrodite.css)(_theme.styles[props.color + '-border-hover']) : (0, _aphrodite.css)(_theme.styles[props.color + '-background-hover']), props.rectangle ? 'rectangle' : '', props.pill ? 'pill' : '', props.shadow ? 'shadow' : ''];
-
-    var _props = (0, _helpers.userProps)(props).apply(undefined, _toConsumableArray(Object.keys(Button.defaultProps)).concat(['className']));
+    var classNameList = ['rtui-alert', props.outline ? (0, _aphrodite.css)(_theme.styles[props.color + '-border']) : (0, _aphrodite.css)(_theme.styles[props.color + '-background']), props.rectangle ? 'rectangle' : '', props.shadow ? 'shadow' : ''];
+    var _props = (0, _helpers.userProps)(props).apply(undefined, _toConsumableArray(Object.keys(Alert.defaultProps)).concat(['className']));
 
     return _react2.default.createElement(
-        'button',
+        'div',
         _extends({}, _props, {
             className: _classnames2.default.apply(undefined, classNameList)
         }),
@@ -983,35 +1045,17 @@ var Button = function Button(props) {
     );
 };
 
-Button.defaultProps = {
+Alert.defaultProps = {
     color: 'primary',
-    size: '',
-    block: false,
     outline: false,
     rectangle: false,
-    pill: false,
     shadow: false
 };
 
-exports.default = Button;
+exports.default = Alert;
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(17);
-} else {
-  module.exports = __webpack_require__(18);
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1024,7 +1068,7 @@ if (process.env.NODE_ENV === 'production') {
  * LICENSE file in the root directory of this source tree.
  */
 
-var m=__webpack_require__(3),n=__webpack_require__(9),p=__webpack_require__(1),q="function"===typeof Symbol&&Symbol["for"],r=q?Symbol["for"]("react.element"):60103,t=q?Symbol["for"]("react.call"):60104,u=q?Symbol["for"]("react.return"):60105,v=q?Symbol["for"]("react.portal"):60106,w=q?Symbol["for"]("react.fragment"):60107,x="function"===typeof Symbol&&Symbol.iterator;
+var m=__webpack_require__(6),n=__webpack_require__(10),p=__webpack_require__(1),q="function"===typeof Symbol&&Symbol["for"],r=q?Symbol["for"]("react.element"):60103,t=q?Symbol["for"]("react.call"):60104,u=q?Symbol["for"]("react.return"):60105,v=q?Symbol["for"]("react.portal"):60106,w=q?Symbol["for"]("react.fragment"):60107,x="function"===typeof Symbol&&Symbol.iterator;
 function y(a){for(var b=arguments.length-1,e="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,c=0;c<b;c++)e+="\x26args[]\x3d"+encodeURIComponent(arguments[c+1]);b=Error(e+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}
 var z={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}};function A(a,b,e){this.props=a;this.context=b;this.refs=n;this.updater=e||z}A.prototype.isReactComponent={};A.prototype.setState=function(a,b){"object"!==typeof a&&"function"!==typeof a&&null!=a?y("85"):void 0;this.updater.enqueueSetState(this,a,b,"setState")};A.prototype.forceUpdate=function(a){this.updater.enqueueForceUpdate(this,a,"forceUpdate")};
 function B(a,b,e){this.props=a;this.context=b;this.refs=n;this.updater=e||z}function C(){}C.prototype=A.prototype;var D=B.prototype=new C;D.constructor=B;m(D,A.prototype);D.isPureReactComponent=!0;function E(a,b,e){this.props=a;this.context=b;this.refs=n;this.updater=e||z}var F=E.prototype=new C;F.constructor=E;m(F,A.prototype);F.unstable_isAsyncReactComponent=!0;F.render=function(){return this.props.children};var G={current:null},H=Object.prototype.hasOwnProperty,I={key:!0,ref:!0,__self:!0,__source:!0};
@@ -1039,7 +1083,7 @@ isValidElement:K,version:"16.2.0",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_F
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1060,12 +1104,12 @@ if (process.env.NODE_ENV !== "production") {
   (function() {
 'use strict';
 
-var _assign = __webpack_require__(3);
-var emptyObject = __webpack_require__(9);
+var _assign = __webpack_require__(6);
+var emptyObject = __webpack_require__(10);
 var invariant = __webpack_require__(2);
-var warning = __webpack_require__(4);
+var warning = __webpack_require__(7);
 var emptyFunction = __webpack_require__(1);
-var checkPropTypes = __webpack_require__(10);
+var checkPropTypes = __webpack_require__(11);
 
 // TODO: this is special because it gets imported during build.
 
@@ -2404,42 +2448,7 @@ module.exports = react;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-if (process.env.NODE_ENV !== 'production') {
-  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
-    Symbol.for &&
-    Symbol.for('react.element')) ||
-    0xeac7;
-
-  var isValidElement = function(object) {
-    return typeof object === 'object' &&
-      object !== null &&
-      object.$$typeof === REACT_ELEMENT_TYPE;
-  };
-
-  // By explicitly using `prop-types` you are opting into new development behavior.
-  // http://fb.me/prop-types-in-prod
-  var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(20)(isValidElement, throwOnDirectAccess);
-} else {
-  // By explicitly using `prop-types` you are opting into new production behavior.
-  // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(21)();
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2454,11 +2463,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 var emptyFunction = __webpack_require__(1);
 var invariant = __webpack_require__(2);
-var warning = __webpack_require__(4);
-var assign = __webpack_require__(3);
+var warning = __webpack_require__(7);
+var assign = __webpack_require__(6);
 
-var ReactPropTypesSecret = __webpack_require__(5);
-var checkPropTypes = __webpack_require__(10);
+var ReactPropTypesSecret = __webpack_require__(8);
+var checkPropTypes = __webpack_require__(11);
 
 module.exports = function(isValidElement, throwOnDirectAccess) {
   /* global Symbol */
@@ -2989,7 +2998,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3004,7 +3013,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 
 var emptyFunction = __webpack_require__(1);
 var invariant = __webpack_require__(2);
-var ReactPropTypesSecret = __webpack_require__(5);
+var ReactPropTypesSecret = __webpack_require__(8);
 
 module.exports = function() {
   function shim(props, propName, componentName, location, propFullName, secret) {
@@ -3054,13 +3063,86 @@ module.exports = function() {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_22__;
+// removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 23 */
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = __webpack_require__(9);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(12);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _classnames = __webpack_require__(13);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _aphrodite = __webpack_require__(4);
+
+var _theme = __webpack_require__(3);
+
+var _helpers = __webpack_require__(5);
+
+__webpack_require__(25);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var Button = function Button(props) {
+    Button.propTypes = {
+        color: _propTypes2.default.oneOf(Object.keys(_theme.colors)),
+        size: _propTypes2.default.oneOf(['mini', 'tiny', 'small', 'medium', 'large', 'big', 'huge']),
+        block: _propTypes2.default.bool,
+        outline: _propTypes2.default.bool,
+        rectangle: _propTypes2.default.bool,
+        pill: _propTypes2.default.bool,
+        shadow: _propTypes2.default.bool
+    };
+
+    var classNameList = ['rtui-button', props.size, props.block ? 'block' : '', props.outline ? (0, _aphrodite.css)(_theme.styles[props.color + '-border-hover']) : (0, _aphrodite.css)(_theme.styles[props.color + '-background-hover']), props.rectangle ? 'rectangle' : '', props.pill ? 'pill' : '', props.shadow ? 'shadow' : ''];
+
+    var _props = (0, _helpers.userProps)(props).apply(undefined, _toConsumableArray(Object.keys(Button.defaultProps)).concat(['className']));
+
+    return _react2.default.createElement(
+        'button',
+        _extends({}, _props, {
+            className: _classnames2.default.apply(undefined, classNameList)
+        }),
+        props.children
+    );
+};
+
+Button.defaultProps = {
+    color: 'primary',
+    size: '',
+    block: false,
+    outline: false,
+    rectangle: false,
+    pill: false,
+    shadow: false
+};
+
+exports.default = Button;
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

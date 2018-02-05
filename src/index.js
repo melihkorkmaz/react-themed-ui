@@ -1,8 +1,10 @@
 import Theme from './utils/theme';
-import Button from './components/elements/Button';
+import Alert from './components/elements/alert/Alert';
+import Button from './components/elements/button/Button';
 
 
 export {
+    Alert,
     Button
 }
 

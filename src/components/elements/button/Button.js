@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { css } from 'aphrodite';
-import { colors, styles } from '../../utils/theme';
-import { userProps } from '../../utils/helpers';
+import { colors, styles } from '../../../utils/theme';
+import { userProps } from '../../../utils/helpers';
 
 import './button.scss'
 
-const Button = (props) => {
+const Button = props => {
     Button.propTypes = {
         color: PropTypes.oneOf(Object.keys(colors)),
         size : PropTypes.oneOf(['mini', 'tiny', 'small', 'medium', 'large', 'big', 'huge']),
@@ -18,7 +18,7 @@ const Button = (props) => {
         shadow : PropTypes.bool
     };
 
-    let classNameList = [
+    const classNameList = [
         'rtui-button', 
         props.size,
         props.block ? 'block' : '', 

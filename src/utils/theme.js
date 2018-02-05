@@ -47,6 +47,11 @@ const initStyles = () => {
                     }
                 };
 
+                acc[`${key}-border`] = {
+                    borderColor: colors[key],
+                    color: colors[key]
+                };
+
                 acc[`${key}-border-hover`] = {
                     borderColor: colors[key],
                     color: colors[key],

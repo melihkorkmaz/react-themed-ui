@@ -4,6 +4,7 @@ import rtui from '../src'
 import './storybook.scss'
 
 function loadStories() {
+  require('../src/stories/elements/alert');
   require('../src/stories/elements/button');
 }
 
