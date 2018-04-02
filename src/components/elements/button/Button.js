@@ -19,16 +19,17 @@ const Button = props => {
     };
 
     const classNameList = [
-        'rtui-button', 
+        'rtui-button',
+        props.className,
         props.size,
         props.block ? 'block' : '', 
-        props.outline ? css(styles[`${props.color}-border-hover`]) : css(styles[`${props.color}-background-hover`]),
+        props.outline ? css(styles[`${props.color || 'primary'}-border-hover`]) : css(styles[`${props.color || 'primary'}-background-hover`]),
         props.rectangle ? 'rectangle' : '',
         props.pill ? 'pill' : '',
         props.shadow ? 'shadow' : ''
     ];
-
-    const _props = userProps(props)(...Object.keys(Button.defaultProps), 'className');
+    
+    const _props = userProps(props)(...Object.keys(Button.propTypes), 'className');
 
     return (
         <button 
@@ -40,15 +41,15 @@ const Button = props => {
     )
 }
 
-Button.defaultProps = {
-    color: 'primary',
-    size : '',
-    block : false,
-    outline : false,
-    rectangle : false,
-    pill : false,
-    shadow : false
-}
+// Button.defaultProps = {
+//     color: 'primary',
+//     size : 'medium',
+//     block : false,
+//     outline : false,
+//     rectangle : false,
+//     pill : false,
+//     shadow : false
+// }
 
 
 export default Button;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Alert } from '../../';
+import rtui, { Alert } from '../';
 import { storiesOf } from '@storybook/react';
 import { withKnobs, text } from '@storybook/addon-knobs/react';
-import { colors, themes } from '../../utils/theme';
-import { formatName } from '../../utils/helpers';
-import rtui from '../../';
+import { colors, themes } from '../utils/theme';
+import { formatName } from '../utils/helpers';
+import ThemeSelect from './components/ThemeSelector';
 
 const stories = storiesOf('Alerts', module);
 stories.addDecorator(withKnobs);
@@ -52,11 +52,7 @@ class AlertView extends React.Component {
             <div>
                 <div className="usage">
                     <h2>Alerts</h2>
-                    <label>Themes</label> : <select selected={this.state.theme} onChange={this.onThemeChanged.bind(this)}>
-                        {Object.keys(themes).map(theme => {
-                            return (<option key={theme} value={theme.replace('Theme', '')}>{formatName(theme.replace('Theme', ''))}</option>)
-                        })}
-                    </select>
+                    <ThemeSelect theme={this.state.theme} onThemeChanged={this.onThemeChanged.bind(this)}></ThemeSelect>
                 </div>
                 {
                     Object.keys(colors).filter(color => !color.includes('invert')).map(color => {

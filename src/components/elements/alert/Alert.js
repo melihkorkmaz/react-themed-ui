@@ -17,11 +17,12 @@ const Alert = props => {
 
     const classNameList = [
         'rtui-alert',  
-        props.outline ? css(styles[`${props.color}-border`]) : css(styles[`${props.color}-background`]),
+        props.className,
+        props.outline ? css(styles[`${props.color || 'primary'}-border`]) : css(styles[`${props.color || 'primary'}-background`]),
         props.rectangle ? 'rectangle' : '',
         props.shadow ? 'shadow' : ''
     ];
-    const _props = userProps(props)(...Object.keys(Alert.defaultProps), 'className');
+    const _props = userProps(props)(...Object.keys(Alert.propTypes), 'className');
 
     return (
         <div {..._props}
@@ -32,11 +33,5 @@ const Alert = props => {
     )
 }
 
-Alert.defaultProps = {
-    color: 'primary',
-    outline : false,
-    rectangle : false,
-    shadow : false
-}
 
 export default Alert;

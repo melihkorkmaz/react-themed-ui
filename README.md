@@ -45,6 +45,7 @@ You can use buttons with different colors, size and styles. Default color is pri
 
 | Attribute | type | Description |
 | ------ | ------ | ------ | 
+| color | string | Theme color name|
 | shadow | bool | Drop shadow |
 | outline | bool | Outline button style |
 | rectangle | bool | No border radius |
@@ -63,6 +64,7 @@ You can use alerts with different colors and styles. Default color is primary wi
 
 | Attribute | type | Description |
 | ------ | ------ | ------ | 
+| color | string | Theme color name|
 | shadow | bool | Drop shadow |
 | outline | bool | Outline button style |
 | rectangle | bool | No border radius |
